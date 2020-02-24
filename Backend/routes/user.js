@@ -7,29 +7,41 @@ const User = require('../models/user');
 
 //Add a new user
 router.post('/', (req, res) => {
-    User.create({
-        name: req.body.name,
-        email: req.body.email
-    }, (error, users) => {
+    User.find({ email: req.body.email }, (error, result) => {
         if (!error) {
-            res.status(201).json({
-                message: 'Successfully Saved !',
-                data: users
-            });
+            if (result.length != 0) {
+                res.status(500).json({
+                    message: 'Email ID already registered'
+                })
+            }
+            else {
+                User.create({
+                    name: req.body.name,
+                    email: req.body.email
+                }, (error, users) => {
+                    if (!error) {
+                        res.status(201).json({
+                            message: 'Successfully Saved !',
+                            data: users
+                        });
+                    }
+                })
+            }
         }
-    })
+    });
+
 });
 
 //Display the list of Registered Users
-router.get('/', (req,res) => {
+router.get('/', (req, res) => {
     User.find({}, (error, users) => {
-        if(error){
+        if (error) {
             res.status(500).json({
                 message: error.message,
                 error: error
             })
         }
-        else{
+        else {
             res.status(200).json({
                 message: 'User details fetched successfully',
                 data: users

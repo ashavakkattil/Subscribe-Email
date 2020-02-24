@@ -19,7 +19,7 @@
           :rules="emailRules"
           clearable
         ></v-text-field>
-        <v-btn color="success form-btn" dark @click="submitForm">Submit</v-btn>
+        <v-btn color="success form-btn" dark @click="submitForm">Subscribe</v-btn>
 
         <v-btn color="success form-btn" dark @click="resetData">Reset</v-btn>
       </v-form>
@@ -49,7 +49,8 @@ export default {
             v
           ) || "Invalid Email"
       ],
-      users: ""
+      users: "",
+     
     };
   },
   methods: {
@@ -67,6 +68,7 @@ export default {
         name: this.name,
         email: this.email
       });
+      
       this.users = response.data.data;
       this.$router.push('/users');
     }

@@ -1,9 +1,9 @@
 <template>
   <v-container>
-    <h2>List of Registered Users</h2>
-    <v-card v-for="(user,i) in users" :key="i">
-    <h4>Name : </h4> <span>{{user.name}}</span>
-    <h4>Email : </h4> <span>{{user.email}}</span>
+    <h2>List of Subscribed Users</h2>
+    <v-card v-for="(user,i) in users" :key="i" class="userCard" outlined>
+    <p><span class="headline font-weight-bold">Name : </span> <span>{{user.name}}</span></p>
+    <p><span>Email : </span> <span>{{user.email}}</span></p>
     </v-card>
     
   </v-container>
@@ -32,3 +32,9 @@ export default {
   }
 };
 </script>
+<style scoped>
+.userCard{
+  margin: 10px auto;
+}
+</style>>
+  
