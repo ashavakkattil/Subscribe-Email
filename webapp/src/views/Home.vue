@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import userService from "../services/UserService";
+
 export default {
   name: "Home",
   components: {},
@@ -46,20 +48,27 @@ export default {
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
             v
           ) || "Invalid Email"
-      ]
+      ],
+      users: ""
     };
   },
   methods: {
     submitForm() {
       var flag = this.$refs.form.validate();
       if (flag == true) {
-        console.log(this.$route.params)
-        this.$router.push({name: 'Users', params: {userName: this.name, userMail: this.email}})
+        this.addusers();
       }
     },
-
     resetData() {
       this.$refs.form.reset();
+    },
+    async addusers() {
+      const response = await userService.addUsers({
+        name: this.name,
+        email: this.email
+      });
+      this.users = response.data.data;
+      this.$router.push('/users');
     }
   }
 };
