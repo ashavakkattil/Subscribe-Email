@@ -2,6 +2,8 @@
   <div class="home">
     <v-card class="loginForm" outlined>
       <v-form class="formComponent" ref="form">
+        {{isError}}
+        <div v-if="isError" class="statusMsg errormsg">{{statusMsg}}</div>
         <v-text-field
           label="Enter your name"
           outlined
@@ -50,7 +52,8 @@ export default {
           ) || "Invalid Email"
       ],
       users: "",
-     
+      isError: "",
+      statusMsg: ""
     };
   },
   methods: {
@@ -62,15 +65,28 @@ export default {
     },
     resetData() {
       this.$refs.form.reset();
+      this.isError = "";
+      this.statusMsg = "";
     },
     async addusers() {
-      const response = await userService.addUsers({
-        name: this.name,
-        email: this.email
-      });
-      
-      this.users = response.data.data;
-      this.$router.push('/users');
+      await userService
+        .addUsers({
+          name: this.name,
+          email: this.email
+        })
+        .then(response => {
+          if (response.data.status == "error") {
+            this.isError = true;
+          } else {
+            this.users = response.data.data;
+            this.isError = false;
+          }
+          this.statusMsg = response.data.message;
+          this.$router.push("/users");
+        })
+        .catch(error => {
+          console.log(error.message);
+        });
     }
   }
 };
@@ -90,5 +106,16 @@ export default {
 }
 >>> .v-input__prepend-inner {
   margin-right: 10px;
+}
+.statusMsg {
+  margin-bottom: 20px;
+  padding: 5px;
+  font-weight: bold;
+}
+.successmsg {
+  background-color: green;
+}
+.errormsg {
+  background-color: red;
 }
 </style>

@@ -7,6 +7,9 @@ export default {
 
     getUsers(){
         return Api().get('/users/');
+    },
+    deleteUser(id){
+       return Api().delete('/users/' + id, {})
     }
 }
 

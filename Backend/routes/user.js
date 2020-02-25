@@ -7,25 +7,39 @@ const User = require('../models/user');
 
 //Add a new user
 router.post('/', (req, res) => {
-    User.find({ email: req.body.email }, (error, result) => {
-        if (!error) {
-            if (result.length != 0) {
-                res.status(500).json({
-                    message: 'Email ID already registered'
-                })
+    User.findOne({ email: req.body.email }, (error, result) => {
+        if (error) {
+            res.json({
+                status: "error",
+                message: error.message
+            });
+        }
+        else {
+            if (result) {
+                res.json({
+                    status: "error",
+                    message: "Email id Already exists",
+                    data: null
+                });
             }
             else {
                 User.create({
                     name: req.body.name,
                     email: req.body.email
-                }, (error, users) => {
+                }, (error, user) => {
                     if (!error) {
                         res.status(201).json({
-                            message: 'Successfully Saved !',
-                            data: users
-                        });
+                            message: 'Successfully registered',
+                            data: user
+                        })
                     }
-                })
+                    else{
+                        res.json({
+                            message: error.message
+                        })
+                    }
+                });
+
             }
         }
     });
@@ -45,6 +59,24 @@ router.get('/', (req, res) => {
             res.status(200).json({
                 message: 'User details fetched successfully',
                 data: users
+            })
+        }
+    })
+})
+
+//Delete User by ID
+
+router.delete('/:id', (req,res) => {
+    User.deleteOne({_id: req.params.id}, (error,data) => {
+        if(!error){
+            res.json({
+                message: 'Successfully Deleted',
+                data: data
+            })
+        }
+        else{
+            res.status(500).json({
+                message: error.message
             })
         }
     })
